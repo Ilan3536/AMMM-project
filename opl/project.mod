@@ -8,17 +8,15 @@ int p[1..n] = ...;  // Prices  of the products.
 int w[1..n] = ...;  // Weights of the products.
 int s[1..n] = ...;  // Sides   of the boxes of the products.
 
-range Objects = 1 .. n;
-
 // Define here your decision variables and
 // any other auxiliary program variables you need.
 // You can run an execute block if needed.
 
 //>>>>>>>>>>>>>>>>
 
+range Objects = 1 .. n;
 
 dvar boolean Selected[Objects]; // if a product is selected or not 1/0
-
 
 // x and y of an object if selected (top left corner/ lowest numbers so you can add the side)
 dvar int+ SelectedX[Objects];
@@ -58,5 +56,27 @@ subject to {
 // You can run an execute block if needed.
 
 //>>>>>>>>>>>>>>>>
+
+execute {
+  var grid = new Array(x);
+
+  // Create empty matrix
+  for (var i = 0; i < x; i++) {
+    grid[i] = new Array(y);
+    for (var j = 0; j < y; j++) {
+      grid[i][j] = " ";
+    }
+  }
+
+  // TODO: Make A B C... matrix
+
+  // Print matrix
+  for (var i = 0; i < y; i++) {
+    for (var j = 0; j < x; j++) {
+      write(grid[j][i]);
+    }
+    writeln()
+  }
+}
 
 //<<<<<<<<<<<<<<<<
