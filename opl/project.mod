@@ -64,16 +64,25 @@ execute {
   for (var i = 0; i < x; i++) {
     grid[i] = new Array(y);
     for (var j = 0; j < y; j++) {
-      grid[i][j] = " ";
+      grid[i][j] = "-";
     }
   }
-
   // TODO: Make A B C... matrix
-
+  for (var k = 1; k <= n; k++) {
+  	if (Selected[k] == 1) {
+        var productLetter = String.fromCharCode('A'.charCodeAt(0) + k - 1);
+    	for (var i = SelectedX[k] - 1; i < SelectedX[k] - 1 + s[k]; i++) { //-1 because matrix is 0-4, and selected is 1-5
+        	for (var j = SelectedY[k] - 1; j < SelectedY[k] - 1 + s[k]; j++) {
+				grid[i][j] = productLetter;
+     		}
+  		}
+	}
+  }
+    
   // Print matrix
-  for (var i = 0; i < y; i++) {
-    for (var j = 0; j < x; j++) {
-      write(grid[j][i]);
+  for (var i = 0; i < x; i++) {
+    for (var j = 0; j < y; j++) {
+      write(grid[i][j]);
     }
     writeln()
   }
