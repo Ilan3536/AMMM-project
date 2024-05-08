@@ -22,6 +22,7 @@ dvar boolean Selected[Objects]; // if a product is selected or not 1/0
 dvar int+ SelectedX[Objects];
 dvar int+ SelectedY[Objects];
 
+
 //<<<<<<<<<<<<<<<<
 
 maximize  // Write here the objective function.
@@ -34,23 +35,25 @@ maximize  // Write here the objective function.
 
 subject to {
     Weight: sum(o in Objects) w[o] * Selected[o] <= c;
-
+    
     CoordsBounds:
     forall(o in Objects) {
-        Selected[o] == 1 => SelectedX[o] >= 1;
-        Selected[o] == 1 => SelectedY[o] >= 1;
-        Selected[o] == 1 => SelectedX[o] + s[o] - 1 <= x;
-        Selected[o] == 1 => SelectedY[o] + s[o] - 1 <= y;
+        SelectedX[o] - 1 >= 1 * (1 - Selected[o]);
+        SelectedY[o] - 1 >= 1 * (1 - Selected[o]);
+        SelectedX[o] + s[o] - 1 - x <= 1 * (1 - Selected[o]);
+        SelectedY[o] + s[o] - 1 - y <= 1 * (1 - Selected[o]);
     }
 
-    Overlaps:
-    forall ( o1, o2 in Objects : o1 != o2 ) {
-      ( Selected[o1] == 1 && Selected[o2] == 1 ) => (
-        ( SelectedX[o1] - SelectedX[o2] + s[o1] <= 0 ) ||
-        ( SelectedX[o2] - SelectedX[o1] + s[o2] <= 0 ) ||
-        ( SelectedY[o1] - SelectedY[o2] + s[o1] <= 0 ) ||
-        ( SelectedY[o2] - SelectedY[o1] + s[o2] <= 0 ) );
-    }
+	Overlaps:
+	forall (o1, o2 in Objects : o1 != o2) {	  
+	    (   (SelectedX[o1] - SelectedX[o2] + s[o1] <= 0) +
+	        (SelectedX[o2] - SelectedX[o1] + s[o2] <= 0) +
+	        (SelectedY[o1] - SelectedY[o2] + s[o1] <= 0) +
+	        (SelectedY[o2] - SelectedY[o1] + s[o2] <= 0) ) 
+	    - 1 >= 100 * (Selected[o1] + Selected[o2] - 2);
+	        
+	}
+
 }
 
 // You can run an execute block if needed.
@@ -86,6 +89,7 @@ execute {
     }
     writeln()
   }
+
 }
 
 //<<<<<<<<<<<<<<<<
