@@ -1,8 +1,9 @@
 main {
   var files = new Array();
 
-  files[0] = "project.0.dat"
-  //files[1] = "project.1.dat"
+  for (var i = 0; i < 10; ++i) {
+    files[i] = "project." + i + ".dat";
+  }
 
   var source = new IloOplModelSource("project.mod");
   var cplex = new IloCplex();
