@@ -15,13 +15,14 @@ int s[1..n] = ...;  // Sides   of the boxes of the products.
 //>>>>>>>>>>>>>>>>
 
 range Objects = 1 .. n;
+range Directions = 1 .. 4;
 
 dvar boolean Selected[Objects]; // if a product is selected or not 1/0
 
 // x and y of an object if selected (top left corner/ lowest numbers so you can add the side)
 dvar int+ SelectedX[Objects];
 dvar int+ SelectedY[Objects];
-
+dvar boolean Overlap[Objects][Objects][Directions];
 
 //<<<<<<<<<<<<<<<<
 
@@ -46,12 +47,11 @@ subject to {
 
 	Overlaps:
 	forall (o1, o2 in Objects : o1 != o2) {	  
-	    (   (SelectedX[o1] - SelectedX[o2] + s[o1] <= 0) +
-	        (SelectedX[o2] - SelectedX[o1] + s[o2] <= 0) +
-	        (SelectedY[o1] - SelectedY[o2] + s[o1] <= 0) +
-	        (SelectedY[o2] - SelectedY[o1] + s[o2] <= 0) ) 
-	    - 1 >= 100 * (Selected[o1] + Selected[o2] - 2);
-	        
+	    (SelectedX[o1] - SelectedX[o2] + s[o1] <= 0) - 1 >= 100 * (Selected[o1] + Selected[o2] + Overlap[o1][o2][1] - 3);
+	    (SelectedX[o2] - SelectedX[o1] + s[o2] <= 0) - 1 >= 100 * (Selected[o1] + Selected[o2] + Overlap[o1][o2][2] - 3);
+	    (SelectedY[o1] - SelectedY[o2] + s[o1] <= 0) - 1 >= 100 * (Selected[o1] + Selected[o2] + Overlap[o1][o2][3] - 3);
+	    (SelectedY[o2] - SelectedY[o1] + s[o2] <= 0) - 1 >= 100 * (Selected[o1] + Selected[o2] + Overlap[o1][o2][4] - 3);
+	    sum(direction in Directions) Overlap[o1][o2][direction] >= 1;
 	}
 
 }
