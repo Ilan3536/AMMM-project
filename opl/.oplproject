@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ASCII"?><project>
+    	
+    <version>1.0</version>
+    	
+    <configs>
+        		
+        <config default="true" name="Configuration1" category="opl">
+            			
+            <ref name="runner.mod" type="model">
+			</ref>
+            		
+        </config>
+        		
+        <config default="false" name="Configuration2" category="opl">
+            			
+            <ref name="project.mod" type="model">
+			</ref>
+            			
+            <ref name="project.0.dat" type="data">
+			</ref>
+            			
+            <ref name="settings.ops" type="setting">
+			</ref>
+            		
+        </config>
+        	
+    </configs>
+    	
+
+</project>
