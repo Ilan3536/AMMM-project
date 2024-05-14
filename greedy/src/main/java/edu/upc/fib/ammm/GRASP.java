@@ -6,6 +6,6 @@ public class GRASP extends Heuristic {
     }
 
     public Solution run() {
-        return new Solution(new int[0][0]);
+        return new Solution(new char[0][0], 0);
     }
 }

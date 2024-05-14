@@ -1,26 +1,27 @@
 package edu.upc.fib.ammm;
 
 public class Solution {
-    // 0 means empty
-    // 1 is first object, 2 second etc.
-    private final int[][] matrix;
+    private final char[][] box;
+    private final int cost;
 
-    Solution(int[][] matrix) {
-        this.matrix = matrix;
+    Solution(char[][] box, int cost) {
+        this.box = box;
+        this.cost = cost;
     }
 
     // Print matrix with A,B,C instead of 1,2,3...
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        int charStart = 64;
-        for(int i = 0; i < matrix.length; i++) {
-            for(int j = 0; j < matrix[i].length; j++) {
-                if (matrix[i][j] == 0)
-                    builder.append(" ");
-                else
-                    builder.append((char) (charStart + matrix[i][j]));
-            }
-        }
-        return builder.toString();
+        return "";
+//        StringBuilder builder = new StringBuilder();
+//        int charStart = 64;
+//        for(int i = 0; i < box.length; i++) {
+//            for(int j = 0; j < box[i].length; j++) {
+//                if (box[i][j] == 0)
+//                    builder.append(" ");
+//                else
+//                    builder.append((char) (charStart + box[i][j]));
+//            }
+//        }
+//        return builder.toString();
     }
 }
