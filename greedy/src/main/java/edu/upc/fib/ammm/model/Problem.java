@@ -1,22 +1,17 @@
-package edu.upc.fib.ammm;
-
-import lombok.Getter;
+package edu.upc.fib.ammm.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Problem {
 
-    record Box(int width, int height, int maxWeight) {
-    }
-
-    record Product(int weight, int side, int price, char letter) {
+    public record Box(int width, int height, int maxWeight) {
     }
 
     public final Box box;
     public final List<Product> products;
 
-    Problem(int x, int y, int c, int n, int[] w, int[] s, int[] p) {
+    public Problem(int x, int y, int c, int n, int[] w, int[] s, int[] p) {
         this.box = new Box(x, y, c);
         this.products = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {

@@ -1,4 +1,6 @@
-package edu.upc.fib.ammm;
+package edu.upc.fib.ammm.parser;
+
+import edu.upc.fib.ammm.model.Problem;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
