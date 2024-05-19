@@ -68,25 +68,25 @@ subject to {
 
 	Overlaps1:
 	forall (i, j in Objects : i != j) {
-	    (PointsX[i] - PointsX[j] + sides[i]) * -1 >= M * (Chosen[i] + Chosen[j] + Overlap[i][j][1] - 3);
+	    PointsX[i] - PointsX[j] + sides[i] <= -M * (Chosen[i] + Chosen[j] + Overlap[i][j][1] - 3);
 	}
 
 	Overlaps2:
 	forall (i, j in Objects : i != j) {
-	    (PointsX[j] - PointsX[i] + sides[j]) * -1 >= M * (Chosen[i] + Chosen[j] + Overlap[i][j][2] - 3);
+	    PointsX[j] - PointsX[i] + sides[j] <= -M * (Chosen[i] + Chosen[j] + Overlap[i][j][2] - 3);
 	}
 
 	Overlaps3:
 	forall (i, j in Objects : i != j) {
-	    (PointsY[i] - PointsY[j] + sides[i]) * -1 >= M * (Chosen[i] + Chosen[j] + Overlap[i][j][3] - 3);
+	    PointsY[i] - PointsY[j] + sides[i] <= -M * (Chosen[i] + Chosen[j] + Overlap[i][j][3] - 3);
 	}
 
 	Overlaps4:
 	forall (i, j in Objects : i != j) {
-	    (PointsY[j] - PointsY[i] + sides[j]) * -1 >= M * (Chosen[i] + Chosen[j] + Overlap[i][j][4] - 3);
+	    PointsY[j] - PointsY[i] + sides[j] <= -M * (Chosen[i] + Chosen[j] + Overlap[i][j][4] - 3);
 	}
 
-	OneNotOverlap:
+	AtLeastOneNotOverlap:
 	forall (i, j in Objects : i != j) {
 	    sum(direction in Directions) Overlap[i][j][direction] >= 1;
 	}
