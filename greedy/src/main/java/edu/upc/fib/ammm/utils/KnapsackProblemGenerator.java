@@ -71,6 +71,7 @@ public class KnapsackProblemGenerator {
             writer.write("y = " + y + ";\n");
             writer.write("c = " + c + ";\n\n");
             writer.write("n = " + p.length + ";\n\n");
+            writer.write("//    ");
             for (int i = 0; i < p.length; i++) {
                 writer.write((char)('A' + i) + "  ");
             }
