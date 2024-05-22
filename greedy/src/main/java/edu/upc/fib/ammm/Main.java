@@ -1,6 +1,5 @@
 package edu.upc.fib.ammm;
 
-import edu.upc.fib.ammm.algorithms.GRASP;
 import edu.upc.fib.ammm.algorithms.Greedy;
 import edu.upc.fib.ammm.algorithms.GreedyLocalSearch;
 import edu.upc.fib.ammm.algorithms.Heuristic;
@@ -14,7 +13,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         if (args[0].equals("all")){
-            for (int i = 0; i < 10; i++){
+            for (int i = 0; i < 40; i++){
                 solve("C:\\ammm-project\\opl\\project." + i + ".dat");
             }
         } else {
@@ -29,19 +28,32 @@ public class Main {
         System.out.println("Loaded dat file:");
         System.out.println(filePath);
 
-        PrintUtils.printProducts(p.products);
+        PrintUtils.printProducts(p.allProducts);
 
         var algorithms = new Heuristic[]{
                 new Greedy(p),
                 new GreedyLocalSearch(p),
-                new GRASP(p)
+                //new GRASP(p)
         };
 
+        int greedyCost = 0;
         for (var algo : algorithms) {
             System.out.println("Running: " + algo.getClass().getSimpleName());
+
             Solution s = algo.run();
             System.out.println(algo.getClass().getSimpleName() + " solution:");
             PrintUtils.printSolution(s);
+
+            if (algo instanceof Greedy){
+                greedyCost = s.getCost();
+            }
+            if (algo instanceof GreedyLocalSearch){
+                if (greedyCost != s.getCost()){
+                    System.out.println("SOLUTIONS DIFFER!: " + "greedy: " + greedyCost + ", localSearch: " + s.getCost());
+                }
+            }
+
+
         }
     }
 }

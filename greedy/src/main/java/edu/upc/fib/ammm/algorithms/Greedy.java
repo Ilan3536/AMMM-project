@@ -1,6 +1,5 @@
 package edu.upc.fib.ammm.algorithms;
 
-import edu.upc.fib.ammm.model.Position;
 import edu.upc.fib.ammm.model.Problem;
 import edu.upc.fib.ammm.model.Product;
 import edu.upc.fib.ammm.model.Solution;
@@ -15,11 +14,10 @@ public class Greedy extends Heuristic {
     }
 
     public Solution run() {
-        Solution solution = new Solution(new char[p.box.width()][p.box.height()]);
         List<Product> products = new ArrayList<>();
 
         // Sort products based on a compound heuristic of price to side ratio divided by weight
-        Collections.sort(p.products, (p1, p2) -> Double.compare(
+        Collections.sort(p.allProducts, (p1, p2) -> Double.compare(
                 (double) p2.price / p2.side / p2.weight,
                 (double) p1.price / p1.side / p1.weight
         ));
@@ -30,22 +28,22 @@ public class Greedy extends Heuristic {
         int currentHeight = 0;
         int nextRowHeight = 0;
 
-        var box = p.box;
-        for (var product : p.products) {
-            if (currentWidth + product.side <= box.width() && currentHeight + product.side <= box.height()
-                    && totalWeight + product.weight <= box.maxWeight()) {
 
-                solution.placeProductOnPosition(product, new Position(currentWidth, currentHeight));
+        for (var product : p.allProducts) {
+            if (currentWidth + product.side <= p.solution.getWidth() && currentHeight + product.side <= p.solution.getHeight()
+                    && totalWeight + product.weight <= p.solution.getMaxWeight()) {
+
+                p.solution.placeProductOnPosition(product, currentWidth, currentHeight);
 
                 currentWidth += product.side;
                 nextRowHeight = Math.max(nextRowHeight, product.side);
-            } else if (currentHeight + nextRowHeight + product.side <= box.height()
-                    && totalWeight + product.weight <= box.maxWeight()) {
+            } else if (currentHeight + nextRowHeight + product.side <= p.solution.getHeight()
+                    && totalWeight + product.weight <= p.solution.getMaxWeight()) {
                 // Start a new row
                 currentHeight += nextRowHeight;
                 currentWidth = 0;
 
-                solution.placeProductOnPosition(product, new Position(currentWidth, currentHeight));
+                p.solution.placeProductOnPosition(product, currentWidth, currentHeight);
 
                 currentWidth = product.side;
                 nextRowHeight = product.side;
@@ -57,9 +55,9 @@ public class Greedy extends Heuristic {
             products.add(product);
         }
 
-        solution.products = new ArrayList<>(products);
-        solution.calculatePriceAndWeight();
-        return solution;
+        p.solution.selectedProducts = new ArrayList<>(products);
+        p.solution.calculatePriceAndWeight();
+        return p.solution;
     }
 
 }

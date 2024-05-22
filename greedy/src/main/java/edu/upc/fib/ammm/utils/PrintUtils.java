@@ -34,16 +34,16 @@ public class PrintUtils {
         StringBuilder solutionString = new StringBuilder();
         solutionString.append("(Box w: ").append(sol.getBox().length)
                 .append(", h: ").append(sol.getBox()[0].length)
-                .append(", maxWeight: ").append(sol.getWeight()).append("):\n");
+                .append(", maxWeight: ").append(sol.getMaxWeight()).append("):\n");
         for (char[] row : sol.getBox()) {
             for (char cell : row) {
                 solutionString.append(cell == '\u0000' ? '_' : cell); // If cell is empty, print space
             }
             solutionString.append("\n");
         }
-        solutionString.append("Total price: ").append(sol.getPrice()).append(", total weight: ").append(sol.getWeight()).append("\n");
+        solutionString.append("Total price: ").append(sol.getCost()).append(", total weight: ").append(sol.getWeight()).append("\n");
 
-        System.out.println(solutionString.toString());
+        System.out.println(solutionString);
     }
 
 

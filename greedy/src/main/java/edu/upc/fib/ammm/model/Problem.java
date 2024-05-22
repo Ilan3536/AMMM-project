@@ -5,19 +5,26 @@ import java.util.List;
 
 public class Problem {
 
-    public record Box(int width, int height, int maxWeight) {
-    }
-
-    public final Box box;
-    public final List<Product> products;
+    public Solution solution;
+    public List<Product> allProducts;
 
     public Problem(int x, int y, int c, int n, int[] w, int[] s, int[] p) {
-        this.box = new Box(x, y, c);
-        this.products = new ArrayList<>(n);
+        this.solution = new Solution(x, y, c);
+        this.allProducts = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
-            this.products.add(new Product(w[i], s[i], p[i], (char) ('A' + i)));
+            this.allProducts.add(new Product(w[i], s[i], p[i], (char) ('A' + i)));
         }
     }
+
+    public Problem(int x, int y, int c, List<Product> products){
+        this.solution = new Solution(x, y, c);
+        this.allProducts = new ArrayList<>(products);
+    }
+
+    public Problem cloneWithSubset(List<Product> newSelected) {
+        return new Problem(this.solution.getWidth(), this.solution.getHeight(), this.solution.getCost(), newSelected);
+    }
+
 
 //    public String toString() {
 //        return this.toDat();
