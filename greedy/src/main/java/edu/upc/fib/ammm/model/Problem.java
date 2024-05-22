@@ -22,7 +22,7 @@ public class Problem {
     }
 
     public Problem cloneWithSubset(List<Product> newSelected) {
-        return new Problem(this.solution.getWidth(), this.solution.getHeight(), this.solution.getCost(), newSelected);
+        return new Problem(this.solution.getWidth(), this.solution.getHeight(), this.solution.getMaxWeight(), newSelected);
     }
 
 
