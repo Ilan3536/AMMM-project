@@ -28,12 +28,6 @@ public class Solution {
         this.selectedProducts = new ArrayList<>();
     }
 
-    public Solution(char[][] box){
-        this.box = box;
-        this.selectedProducts = new ArrayList<>();
-        this.cost = calculateCost();
-        this.weight = calculateWeight();
-    }
 
     private boolean isProductPlaced(char letter) {
         for (char[] row : this.box) {
@@ -45,9 +39,6 @@ public class Solution {
         }
         return false;
     }
-
-
-
 
     public void placeProductOnPosition(Product product, int width, int height) {
         for (int x = width; x < width + product.side; x++) {

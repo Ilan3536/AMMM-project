@@ -19,7 +19,7 @@ public class GreedyLocalSearch extends Heuristic {
         return firstImprovingStrategy(greedySolution);
     }
 
-    private Solution firstImprovingStrategy(Solution initialSolution) {
+    public Solution firstImprovingStrategy(Solution initialSolution) {
         Solution bestSolution = initialSolution;
         boolean improved = true;
 
@@ -51,7 +51,7 @@ public class GreedyLocalSearch extends Heuristic {
                 }
             }
         }
-
+        bestSolution.calculatePriceAndWeight();
         return bestSolution;
     }
 

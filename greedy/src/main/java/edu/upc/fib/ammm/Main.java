@@ -1,5 +1,6 @@
 package edu.upc.fib.ammm;
 
+import edu.upc.fib.ammm.algorithms.GRASP;
 import edu.upc.fib.ammm.algorithms.Greedy;
 import edu.upc.fib.ammm.algorithms.GreedyLocalSearch;
 import edu.upc.fib.ammm.algorithms.Heuristic;
@@ -12,7 +13,11 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        if (args[0].equals("all")){
+        if (args[0].equals("onlycost")){
+            for (int i = 0; i < 40; i++){
+                solvePrintOnlyCost("C:\\ammm-project\\opl\\project." + i + ".dat");
+            }
+        } else if (args[0].equals("all")){
             for (int i = 0; i < 40; i++){
                 solve("C:\\ammm-project\\opl\\project." + i + ".dat");
             }
@@ -33,10 +38,11 @@ public class Main {
         var algorithms = new Heuristic[]{
                 new Greedy(p),
                 new GreedyLocalSearch(p),
-                //new GRASP(p)
+                new GRASP(p, 10, 0),
+                new GRASP(p, 10, 0.5),
+                new GRASP(p, 10, 1)
         };
 
-        int greedyCost = 0;
         for (var algo : algorithms) {
             System.out.println("Running: " + algo.getClass().getSimpleName());
 
@@ -44,14 +50,36 @@ public class Main {
             System.out.println(algo.getClass().getSimpleName() + " solution:");
             PrintUtils.printSolution(s);
 
-            if (algo instanceof Greedy){
-                greedyCost = s.getCost();
+        }
+
+    }
+
+    public static void solvePrintOnlyCost(String filePath) throws IOException {
+        var p = Parser.parseFile(filePath);
+
+        System.out.print("Loaded dat file:");
+        System.out.println(filePath);
+
+
+        var algorithms = new Heuristic[]{
+                new Greedy(p),
+                new GreedyLocalSearch(p),
+                new GRASP(p, 100, 0),
+                new GRASP(p, 100, 0.5),
+                new GRASP(p, 100, 1)
+        };
+
+        for (var algo : algorithms) {
+
+            Solution s = algo.run();
+            if (algo instanceof GRASP grasp){
+                System.out.print(algo.getClass().getSimpleName() + "(iters: " + grasp.getMaxIterations() + ", α: " + grasp.getAlpha() + ")"+ ": " + s.getCost());
+
+            } else {
+                System.out.print(algo.getClass().getSimpleName() + ": " + s.getCost());
+
             }
-            if (algo instanceof GreedyLocalSearch){
-                if (greedyCost != s.getCost()){
-                    System.out.println("SOLUTIONS DIFFER!: " + "greedy: " + greedyCost + ", localSearch: " + s.getCost());
-                }
-            }
+            System.out.println();
 
 
         }
