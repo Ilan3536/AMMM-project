@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +26,9 @@ public class PlotPerformance {
     public void plot() {
         var timestamp = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT).replace(":", "_");
 
-        try (PrintWriter out = new PrintWriter(Globals.OUT_DIR + "perf_" + timestamp + ".csv")) {
+        var path = Path.of(Globals.OUT_DIR, "perf_" + timestamp + ".csv").toAbsolutePath();
+        log.info("Output benchmark CSV: {}", path);
+        try (PrintWriter out = new PrintWriter(path.toFile())) {
             out.print(csv());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

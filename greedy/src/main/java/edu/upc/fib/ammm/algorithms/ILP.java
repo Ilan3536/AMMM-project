@@ -85,4 +85,8 @@ public class ILP {
         }
         return null;
     }
+
+    public String toString() {
+        return this.getClass().getSimpleName();
+    }
 }

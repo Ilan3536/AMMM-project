@@ -59,12 +59,12 @@ public class Main {
     public static void solveFile(Path path, Map<Problem, List<PerformanceData>> results) {
         try {
             var p = Parser.parseFile(path.toString());
+            log.debug("Loaded dat file: {}", path);
             var performances = solveProblem(p);
             results.put(p, performances);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        log.debug("Loaded dat file: {}", path);
     }
 
     public static List<PerformanceData> solveProblem(Problem p) {
@@ -80,6 +80,7 @@ public class Main {
         );
 
         for (var algo : algorithms) {
+            log.info("Running {}", algo);
             long startTime = System.currentTimeMillis();
             Solution s = algo.run();
             long elapsedTime = System.currentTimeMillis() - startTime;
@@ -93,6 +94,7 @@ public class Main {
 
         if (Globals.ENABLE_ILP) {
             var ilp = new ILP();
+            log.info("Running {}", ilp);
             var ilpPerf = ilp.solve(p);
             performances.add(ilpPerf);
         }
