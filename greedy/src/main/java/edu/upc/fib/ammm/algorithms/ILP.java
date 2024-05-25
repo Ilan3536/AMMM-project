@@ -59,16 +59,27 @@ public class ILP {
         return null;
     }
 
+    private PerformanceData parseOutput(Problem problem, String output) {
+        int objective = 0;
+        float time = 0;
+        var solution = new Solution(problem.getBox());
+        for (var line : output.lines().toArray(String[]::new)) {
+            if (line.startsWith("TIME: ")) {
+                time = Float.parseFloat(line.split("\\s+")[1]);
+            } else if (line.startsWith("OBJECTIVE: ")) {
+                objective = Integer.parseInt(line.split("\\s+")[1]);
+            }
+        }
+        solution.setCost(objective);
+        return new PerformanceData("ILP", solution, time);
+    }
+
     public PerformanceData solve(Problem problem) {
         try {
             var out = runOpl(new String[]{model, problem.getFilePath()});
             System.out.println(out);
-            var solution = new Solution(problem.getBox());
-            // TODO parse out
-            solution.setCost(0);
-            float time = 0;
 
-            return new PerformanceData("ILP", solution, time);
+            return parseOutput(problem, out);
         } catch (Exception e) {
             log.error("Error while running CPLEX on {} {}", model, problem.getFilePath(), e);
         }
