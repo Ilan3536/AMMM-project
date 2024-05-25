@@ -12,9 +12,6 @@ main {
   for (var i = 0; i < files.length; ++i) {
     writeln("Running " + files[i]);
 
-    var start = new Date();
-    var startTime = start.getTime();
-
     var opl = new IloOplModel(def, cplex);
 
     var data = new IloOplDataSource(files[i]);
@@ -31,9 +28,6 @@ main {
 
     opl.end();
 
-    var end = new Date();
-    var endTime = end.getTime();
-    writeln("Time: " + (endTime - startTime) + " ms");
     writeln();
   }
 }

@@ -27,6 +27,8 @@ int capacity = c;
 
 int M;
 
+float startTime;
+
 execute {
   var maxs = 0;
   for (var i = 1; i <= n; i++) {
@@ -35,6 +37,10 @@ execute {
     }
   }
   M = (x+y+maxs) * 2; // big enough M to handle biggest side
+  
+  // Benchmark
+  var start = new Date();
+  startTime = start.getTime();
 }
 
 dvar boolean Chosen[Objects]; // if a product is Chosen or not 1/0
@@ -98,19 +104,31 @@ subject to {
 //>>>>>>>>>>>>>>>>
 
 execute {
+  var end = new Date();
+  var endTime = end.getTime();
+  writeln("TIME: " + (endTime - startTime) + " ms");
+  
+  var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  var alphabetLower = "abcdefghijklmnopqrstuvwxyz";
+  var numbers = "0123456789";
+  var greekChars = "αβγδεζηθικλμνξοπρστυφχψω";
+  var russianChars = "абвгдежзийклмнопрстуфхцчшщъыьэюяё";
+  var armenian = "աբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆ";
+  var georgian = "ႠႡႢႣႤႥႦႧႨႩႪႫႬႭႮႯႰႱႲႳႴႵႶႷႸႹႺႻႼႽႾႿჀჁჂჃჄჅ";
+  var all = alphabet + alphabetLower + numbers + greekChars + russianChars + armenian + georgian;
+  
   var grid = new Array(x);
 
   // Create empty matrix
   for (var i = 0; i < x; i++) {
     grid[i] = new Array(y);
     for (var j = 0; j < y; j++) {
-      grid[i][j] = "-";
+      grid[i][j] = "_";
     }
   }
-  // TODO: Make A B C... matrix
   for (var k = 1; k <= n; k++) {
     if (Chosen[k] == 1) {
-      var productLetter = String.fromCharCode('A'.charCodeAt(0) + k - 1);
+      var productLetter = all.charAt(k - 1);
       for (var i = PointsX[k] - 1; i < PointsX[k] - 1 + s[k]; i++) { //-1 because matrix is 0-4, and Chosen is 1-5
         for (var j = PointsY[k] - 1; j < PointsY[k] - 1 + s[k]; j++) {
           grid[i][j] = productLetter;
