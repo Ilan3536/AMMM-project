@@ -2,6 +2,7 @@ package edu.upc.fib.ammm;
 
 import edu.upc.fib.ammm.algorithms.GRASP;
 import edu.upc.fib.ammm.model.Solution;
+import edu.upc.fib.ammm.utils.Globals;
 import edu.upc.fib.ammm.utils.Parser;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,7 +18,7 @@ public class GraspExperiment {
     private static final int[] iterationValues = {100, 500, 1000, 5000};
 
     public static void main(String[] args) {
-        try (var files = Files.list(Paths.get("data"))) {
+        try (var files = Files.list(Paths.get(Globals.PROBLEMS_DIR))) {
             files
                 .filter(path -> path.toString().endsWith(".dat"))
                 .sorted(Comparator.comparing(Path::getFileName))

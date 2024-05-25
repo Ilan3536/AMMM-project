@@ -1,6 +1,7 @@
-package edu.upc.fib.ammm.utils;
+package edu.upc.fib.ammm;
 
 import edu.upc.fib.ammm.model.Problem;
+import edu.upc.fib.ammm.utils.Globals;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileWriter;
@@ -27,7 +28,7 @@ public class InstanceGenerator {
 
     private static final int MAX_TRIES = 10000;
 
-    private static final String DEFAULT_OUT_FOLDER = "data";
+    private static final String DEFAULT_OUT_FOLDER = Globals.PROBLEMS_DIR;
 
     public static void main(String[] args) {
         var out = Path.of(args.length == 0 ? DEFAULT_OUT_FOLDER : args[0]).toAbsolutePath();

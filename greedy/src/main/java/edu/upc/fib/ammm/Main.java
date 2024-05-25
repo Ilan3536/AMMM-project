@@ -7,6 +7,7 @@ import edu.upc.fib.ammm.algorithms.ILP;
 import edu.upc.fib.ammm.model.PerformanceData;
 import edu.upc.fib.ammm.model.Problem;
 import edu.upc.fib.ammm.model.Solution;
+import edu.upc.fib.ammm.utils.Globals;
 import edu.upc.fib.ammm.utils.Parser;
 import edu.upc.fib.ammm.utils.PlotPerformance;
 import edu.upc.fib.ammm.utils.PrintUtils;
@@ -21,11 +22,10 @@ import java.util.function.Function;
 
 @Slf4j
 public class Main {
-    static final String DEFAULT_PATH = "data";
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            processAllFilesInDirectory(Path.of(DEFAULT_PATH).toAbsolutePath());
+            processAllFilesInDirectory(Path.of(Globals.PROBLEMS_DIR));
         } else {
             var path = Path.of(args[0]).toAbsolutePath();
             var file = path.toFile();
