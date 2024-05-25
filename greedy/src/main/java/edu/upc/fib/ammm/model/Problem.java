@@ -1,6 +1,7 @@
 package edu.upc.fib.ammm.model;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,17 +10,19 @@ import java.util.function.ToIntFunction;
 
 import static java.util.Collections.unmodifiableList;
 
+@Setter
 @Getter
 public final class Problem {
 
     private final Box box;
     private final List<Product> products;
+    private String filePath = null;
 
     public Problem(int width, int height, int maxWeight, int n, int[] weights, int[] sizes, int[] prices) {
         this.box = new Box(width, height, maxWeight);
         List<Product> productList = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
-            productList.add(new Product(weights[i], sizes[i], prices[i], (char) ('A' + i)));
+            productList.add(new Product(weights[i], sizes[i], prices[i], indexToChar(i)));
         }
         this.products = unmodifiableList(productList);
     }
@@ -27,6 +30,21 @@ public final class Problem {
     public Problem(Box box, List<Product> products) {
         this.box = box;
         this.products = List.copyOf(products);
+    }
+
+    private static char indexToChar(int index) {
+        // Do not overcomplicate conversion so it is reusable in CPLEX OPL
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String alphabetLower = "abcdefghijklmnopqrstuvwxyz";
+        String numbers = "0123456789";
+        String greekChars = "αβγδεζηθικλμνξοπρστυφχψω";
+        String russianChars = "абвгдежзийклмнопрстуфхцчшщъыьэюяё";
+        String armenian = "աբգդեզէըթժիլխծկհձղճմյնշոչպջռսվտրցւփքօֆ";
+        String georgian = "ႠႡႢႣႤႥႦႧႨႩႪႫႬႭႮႯႰႱႲႳႴႵႶႷႸႹႺႻႼႽႾႿჀჁჂჃჄჅ";
+
+        String all = alphabet + alphabetLower + numbers + greekChars + russianChars + armenian + georgian;
+
+        return all.charAt(index);
     }
 
     public int getN() {

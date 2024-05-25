@@ -12,7 +12,9 @@ import java.nio.file.Paths;
 public class Parser {
     public static Problem parseFile(String path) throws IOException {
         String content = Files.readString(Paths.get(path));
-        return parse(content);
+        var problem = parse(content);
+        problem.setFilePath(path);
+        return problem;
     }
 
     private static int[] parseArray(int n, String array) {
