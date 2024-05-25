@@ -74,9 +74,8 @@ public class Main {
         var algorithms = List.of(
             new Greedy(p),
             new GreedyLocalSearch(p),
-            new GRASP(p, 100, 0),
-            new GRASP(p, 100, 0.5),
-            new GRASP(p, 100, 1)
+            new GRASP(p, 1000, 0.5),
+            new GRASP(p, 1000, 1.0)
         );
 
         for (var algo : algorithms) {

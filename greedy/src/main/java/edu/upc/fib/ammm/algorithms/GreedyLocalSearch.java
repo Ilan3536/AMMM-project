@@ -45,6 +45,7 @@ public class GreedyLocalSearch extends Heuristic {
                     Solution newSolution = findSolutionForProductList(newProductList);
 
                     if (newSolution.getCost() > bestSolution.getCost()) {
+                        log.trace("Found a better solution with cost: {}, before cost: {}", newSolution.getCost(), bestSolution.getCost());
                         bestSolution = newSolution;
                         improved = true;
                         break;
@@ -53,7 +54,6 @@ public class GreedyLocalSearch extends Heuristic {
                 }
 
                 if (improved) {
-                    log.debug("Found a better solution with cost: {}", bestSolution.getCost());
                     break;
                 }
             }

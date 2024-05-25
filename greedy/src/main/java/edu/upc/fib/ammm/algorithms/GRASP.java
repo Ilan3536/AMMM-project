@@ -40,10 +40,7 @@ public class GRASP extends Heuristic {
 
     private Solution constructGreedyRandomizedSolution() {
         var products = new ArrayList<>(problem.getProducts());
-        products.sort((p1, p2) -> Double.compare(
-            (double) p2.price() / p2.side() / p2.weight(),
-            (double) p1.price() / p1.side() / p1.weight()
-        ));
+        products.sort((p1, p2) -> Double.compare(p2.getQValue(), p1.getQValue()));
 
         var solution = new Solution(problem.getBox());
         int currentWidth = 0;
@@ -51,13 +48,16 @@ public class GRASP extends Heuristic {
         int nextRowHeight = 0;
 
         while (!products.isEmpty()) {
+            double qMax = products.getFirst().getQValue();
+            double qMin = products.getLast().getQValue();
+            double threshold = qMax - alpha * (qMax - qMin);
 
-            // [qmin, qmin + α(qmax - qmin)]
-            int qmin = 0;
-            int qmax = (int) (alpha * (products.size() - 1));
-            int index = random.nextInt(qmax - qmin + 1) + qmin; // Randomly select a product within the range
-
-            Product product = products.remove(index);
+            var candidateCount = products.stream()
+                .filter(p -> p.getQValue() >= threshold)
+                .count();
+            int index = random.nextInt((int) candidateCount);
+            // Randomly select a product having q-value within [qMin, qMin + α(qMax - qMin)]
+            var product = products.remove(index);
 
             if (solution.canPlaceProductInCurrentRow(currentWidth, currentHeight, product)) {
                 // If the product fits in the current row, place it there

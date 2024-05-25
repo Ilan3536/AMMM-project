@@ -13,10 +13,7 @@ public class Greedy extends Heuristic {
     public Solution run() {
         // Sort products based on a compound heuristic of price to side ratio divided by weight
         var products = new ArrayList<>(this.problem.getProducts());
-        products.sort((p1, p2) -> Double.compare(
-            (double) p2.price() / p2.side() / p2.weight(),
-            (double) p1.price() / p1.side() / p1.weight()
-        ));
+        products.sort((p1, p2) -> Double.compare(p2.getQValue(), p1.getQValue()));
 
         int currentWidth = 0;
         int currentHeight = 0;

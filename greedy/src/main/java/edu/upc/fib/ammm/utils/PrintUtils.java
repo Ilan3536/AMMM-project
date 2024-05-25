@@ -53,7 +53,6 @@ public final class PrintUtils {
             }
         }
 
-        solutionString.append("\n");
         solutionString.append(String.format("Total weight: %d\n", sol.getWeight()));
         solutionString.append(String.format("Total price (OBJECTIVE FUNCTION): %d\n", sol.getCost()));
 

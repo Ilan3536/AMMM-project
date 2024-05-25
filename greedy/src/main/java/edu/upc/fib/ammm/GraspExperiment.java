@@ -15,7 +15,7 @@ import java.util.Comparator;
 @Slf4j
 public class GraspExperiment {
     private static final double[] alphaValues = {0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
-    private static final int[] iterationValues = {100, 500, 1000, 5000};
+    private static final int[] iterationValues = {1, 10, 100, 1000};
 
     public static void main(String[] args) {
         try (var files = Files.list(Paths.get(Globals.PROBLEMS_DIR))) {
@@ -42,7 +42,7 @@ public class GraspExperiment {
                     Solution bestForThisCombo = null;
 
                     // Run multiple trials to account for variability
-                    for (int trial = 0; trial < 10; trial++) {
+                    for (int trial = 0; trial < 5; trial++) {
                         GRASP grasp = new GRASP(problem, maxIterations, alpha);
                         Solution currentSolution = grasp.run();
                         if (bestForThisCombo == null || currentSolution.getCost() > bestForThisCombo.getCost()) {
@@ -58,8 +58,9 @@ public class GraspExperiment {
                 }
             }
 
-            System.out.printf("File: %s, Best Alpha: %.1f, Best Iterations: %d, Best Solution Cost: %d%n",
-                filePath.getFileName(), bestAlpha, bestMaxIterations, bestOverallSolution.getCost());
+            System.out.printf("File: %s, Best Alpha: %.1f, Best Iterations: %d, Best Solution Cost: %d (Weight: %d)%n",
+                filePath.getFileName(), bestAlpha, bestMaxIterations,
+                bestOverallSolution.getCost(), bestOverallSolution.getWeight());
         } catch (IOException e) {
             log.error("Error loading dat file: {}", filePath, e);
         }
