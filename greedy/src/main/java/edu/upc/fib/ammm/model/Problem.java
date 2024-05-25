@@ -1,45 +1,72 @@
 package edu.upc.fib.ammm.model;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.ToIntFunction;
 
-public class Problem {
+import static java.util.Collections.unmodifiableList;
 
-    public Solution solution;
-    public List<Product> allProducts;
+@Getter
+public final class Problem {
 
-    public Problem(int x, int y, int c, int n, int[] w, int[] s, int[] p) {
-        this.solution = new Solution(x, y, c);
-        this.allProducts = new ArrayList<>(n);
+    private final Box box;
+    private final List<Product> products;
+
+    public Problem(int width, int height, int maxWeight, int n, int[] weights, int[] sizes, int[] prices) {
+        this.box = new Box(width, height, maxWeight);
+        List<Product> productList = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
-            this.allProducts.add(new Product(w[i], s[i], p[i], (char) ('A' + i)));
+            productList.add(new Product(weights[i], sizes[i], prices[i], (char) ('A' + i)));
         }
+        this.products = unmodifiableList(productList);
     }
 
-    public Problem(int x, int y, int c, List<Product> products){
-        this.solution = new Solution(x, y, c);
-        this.allProducts = new ArrayList<>(products);
+    public Problem(Box box, List<Product> products) {
+        this.box = box;
+        this.products = List.copyOf(products);
     }
 
-    public Problem cloneWithSubset(List<Product> newSelected) {
-        return new Problem(this.solution.getWidth(), this.solution.getHeight(), this.solution.getMaxWeight(), newSelected);
+    public int getN() {
+        return products.size();
     }
 
+    public String toString() {
+        return this.toDat();
+    }
 
-//    public String toString() {
-//        return this.toDat();
-//    }
-//
-//    public String toDat() {
-//        return """
-//            x = %d;
-//            y = %d;
-//            c = %d;
-//            n = %d;
-//
-//            p = %s;
-//            w = %s;
-//            s = %s;
-//            """.formatted(x, y, c, n, Arrays.toString(p).replace(',', ' '), Arrays.toString(w).replace(',', ' '), Arrays.toString(s).replace(',', ' '));
-//    }
+    public int[] getP() {
+        return getArray(Product::price);
+    }
+
+    public int[] getW() {
+        return getArray(Product::weight);
+    }
+
+    public int[] getS() {
+        return getArray(Product::side);
+    }
+
+    private int[] getArray(ToIntFunction<Product> productToIntFunction) {
+        return products.stream().mapToInt(productToIntFunction).toArray();
+    };
+
+    private String toDat() {
+        var p = getP();
+        var w = getW();
+        var s = getS();
+
+        return """
+            x = %d;
+            y = %d;
+            c = %d;
+            n = %d;
+
+            p = %s;
+            w = %s;
+            s = %s;
+            """.formatted(box.width(), box.height(), box.maxWeight(), getN(), Arrays.toString(p).replace(',', ' '), Arrays.toString(w).replace(',', ' '), Arrays.toString(s).replace(',', ' '));
+    }
 }

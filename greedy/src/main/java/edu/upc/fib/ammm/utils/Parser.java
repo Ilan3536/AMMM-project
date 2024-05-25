@@ -1,7 +1,8 @@
-package edu.upc.fib.ammm.parser;
+package edu.upc.fib.ammm.utils;
 
 import edu.upc.fib.ammm.model.Problem;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.IOException;
@@ -16,10 +17,8 @@ public class Parser {
 
     private static int[] parseArray(int n, String array) {
         int[] arr = new int[n];
-        String[] values = array.split("\\s+");
-        for (int i = 0; i < n; i++) {
-            arr[i] = Integer.parseInt(values[i+1]);
-        }
+        var values = Arrays.stream(array.split("\\s+")).filter(i -> !i.isEmpty()).mapToInt(Integer::parseInt).toArray();
+        System.arraycopy(values, 0, arr, 0, n);
         return arr;
     }
 

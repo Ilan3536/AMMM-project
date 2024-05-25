@@ -12,75 +12,37 @@ import java.util.List;
 @AllArgsConstructor
 public class Solution {
 
-    private final char[][] box;
-    private int width;
-    private int height;
+    private final char[][] boxDimension;
+    private final Box box;
     private int cost;
     private int weight;
-    private int maxWeight;
-    public List<Product> selectedProducts;
+    private List<Product> selectedProducts;
 
-    public Solution(int x, int y, int maxWeight){
-        this.width = x;
-        this.height = y;
-        this.box = new char[width][height];
-        this.maxWeight = maxWeight;
+    public Solution(Box box) {
+        this.box = box;
+        this.boxDimension = new char[box.width()][box.height()];
         this.selectedProducts = new ArrayList<>();
     }
 
-
-    private boolean isProductPlaced(char letter) {
-        for (char[] row : this.box) {
-            for (char cell : row) {
-                if (cell == letter) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public void placeProductOnPosition(Product product, int width, int height) {
-        for (int x = width; x < width + product.side; x++) {
-            for (int y = height; y < height + product.side; y++) {
-                this.box[x][y] = product.letter;
+        for (int x = width; x < width + product.side(); x++) {
+            for (int y = height; y < height + product.side(); y++) {
+                this.boxDimension[x][y] = product.letter();
             }
         }
+        cost += product.price();
+        weight += product.weight();
         selectedProducts.add(product);
     }
 
-    public void calculatePriceAndWeight() {
-        calculateCost();
-        calculateWeight();
+    public boolean canPlaceProductInCurrentRow(int currentWidth, int currentHeight, Product product) {
+        return currentWidth + product.side() <= box.width()
+            && currentHeight + product.side() <= box.height()
+            && weight + product.weight() <= box.maxWeight();
     }
 
-    public int calculateCost() {
-        int totalPrice = 0;
-        for (var product : selectedProducts) {
-            if (isProductPlaced(product.letter)) {
-                totalPrice += product.price;
-            }
-        }
-        this.cost = totalPrice;
-        return totalPrice;
+    public boolean canPlaceProductInNewRow(int currentHeight, int nextRowHeight, Product product) {
+        return currentHeight + nextRowHeight + product.side() <= box.height()
+            && weight + product.weight() <= box.maxWeight();
     }
-
-    public int calculateWeight() {
-        int totalWeight = 0;
-        for (var product : selectedProducts) {
-            if (isProductPlaced(product.letter)) {
-                totalWeight += product.weight;
-            }
-        }
-        this.weight = totalWeight;
-        return totalWeight;
-    }
-
-
-    public List<Product> removeProduct(Product product) {
-        List<Product> newProductList = new ArrayList<>(selectedProducts);
-        newProductList.remove(product);
-        return newProductList;
-    }
-
 }

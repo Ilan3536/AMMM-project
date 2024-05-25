@@ -3,85 +3,73 @@ package edu.upc.fib.ammm;
 import edu.upc.fib.ammm.algorithms.GRASP;
 import edu.upc.fib.ammm.algorithms.Greedy;
 import edu.upc.fib.ammm.algorithms.GreedyLocalSearch;
-import edu.upc.fib.ammm.algorithms.Heuristic;
+import edu.upc.fib.ammm.model.Problem;
 import edu.upc.fib.ammm.model.Solution;
-import edu.upc.fib.ammm.parser.Parser;
+import edu.upc.fib.ammm.utils.Parser;
 import edu.upc.fib.ammm.utils.PrintUtils;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Comparator;
+import java.util.List;
 
+@Slf4j
 public class Main {
-    public static void main(String[] args) throws Exception {
 
-        if (args[0].equals("onlycost")){
-            for (int i = 0; i < 40; i++){
-                solvePrintOnlyCost("C:\\ammm-project\\opl\\project." + i + ".dat");
-            }
-        } else if (args[0].equals("all")){
-            for (int i = 0; i < 40; i++){
-                solve("C:\\ammm-project\\opl\\project." + i + ".dat");
-            }
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            processAllFilesInDirectory("data");
         } else {
-            solve(args[0]);
-        }
+            var file = Path.of(args[0]).toFile();
 
+            if (file.isDirectory()) {
+                processAllFilesInDirectory(file.getAbsolutePath());
+            } else {
+                solve(file.getAbsolutePath());
+            }
+        }
     }
 
-    public static void solve(String filePath) throws IOException {
-        var p = Parser.parseFile(filePath);
-
-        System.out.println("Loaded dat file:");
-        System.out.println(filePath);
-
-        PrintUtils.printProducts(p.allProducts);
-
-        var algorithms = new Heuristic[]{
-                new Greedy(p),
-                new GreedyLocalSearch(p),
-                new GRASP(p, 10, 0),
-                new GRASP(p, 10, 0.5),
-                new GRASP(p, 10, 1)
-        };
-
-        for (var algo : algorithms) {
-            System.out.println("Running: " + algo.getClass().getSimpleName());
-
-            Solution s = algo.run();
-            System.out.println(algo.getClass().getSimpleName() + " solution:");
-            PrintUtils.printSolution(s);
-
+    public static void processAllFilesInDirectory(String directory) {
+        try (var files = Files.list(Paths.get(directory))) {
+            files
+                .filter(path -> path.toString().endsWith(".dat"))
+                .sorted(Comparator.comparing(Path::getFileName))
+                .forEach(path -> solve(path.toString()));
+        } catch (IOException e) {
+            log.error("Error reading directory: {}", directory);
         }
-
     }
 
-    public static void solvePrintOnlyCost(String filePath) throws IOException {
-        var p = Parser.parseFile(filePath);
+    public static void solve(String filePath) {
+        try {
+            var p = Parser.parseFile(filePath);
+            log.info("Loaded dat file: {}", filePath);
 
-        System.out.print("Loaded dat file:");
-        System.out.println(filePath);
+            PrintUtils.printProducts(p.getProducts());
 
-
-        var algorithms = new Heuristic[]{
+            var algorithms = List.of(
                 new Greedy(p),
                 new GreedyLocalSearch(p),
                 new GRASP(p, 100, 0),
                 new GRASP(p, 100, 0.5),
                 new GRASP(p, 100, 1)
-        };
+            );
 
-        for (var algo : algorithms) {
+            for (var algo : algorithms) {
+                long startTime = System.currentTimeMillis();
+                Solution s = algo.run();
+                long elapsedTime = System.currentTimeMillis() - startTime;
 
-            Solution s = algo.run();
-            if (algo instanceof GRASP grasp){
-                System.out.print(algo.getClass().getSimpleName() + "(iters: " + grasp.getMaxIterations() + ", α: " + grasp.getAlpha() + ")"+ ": " + s.getCost());
+                PrintUtils.printSolution(s, algo.toString(), true);
 
-            } else {
-                System.out.print(algo.getClass().getSimpleName() + ": " + s.getCost());
-
+                log.info("{} took {} ms to run.", algo, elapsedTime);
             }
-            System.out.println();
-
-
+        } catch (IOException e) {
+            log.error("Error loading dat file: {}", filePath);
         }
     }
 }
