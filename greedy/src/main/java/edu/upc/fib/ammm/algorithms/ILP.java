@@ -63,7 +63,7 @@ public class ILP {
         try {
             var out = runOpl(new String[]{model, problem.getFilePath()});
             System.out.println(out);
-            var solution = new Solution(problem.getWidth(), problem.getHeight(), problem.getMaxWeight());
+            var solution = new Solution(problem.getBox());
             // TODO parse out
             solution.setCost(0);
             float time = 0;
