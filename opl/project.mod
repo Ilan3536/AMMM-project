@@ -14,6 +14,7 @@ int s[1..n] = ...;  // Sides   of the boxes of the products.
 
 //>>>>>>>>>>>>>>>>
 
+int timeLimit = 1800;
 
 range Objects = 1 .. n;
 range Directions = 1 .. 4; // up,down,left,right
@@ -30,6 +31,8 @@ int M;
 float startTime;
 
 execute {
+  cplex.tilim = timeLimit;
+  writeln("Setting CPLEX timeLimit to " + cplex.tilim);
   var maxs = 0;
   for (var i = 1; i <= n; i++) {
     if (sides[i] > maxs) {
