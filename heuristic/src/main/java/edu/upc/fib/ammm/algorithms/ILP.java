@@ -20,6 +20,7 @@ public class ILP {
     final String OPLRUN_WINDOWS = "C:\\Program Files\\IBM\\ILOG\\CPLEX_Studio2211\\opl\\bin\\x64_win64\\oplrun.exe";
     final String OPLRUN_LINUX = "oplrun"; // Should be in PATH
     final String OPLRUN;
+    final int TIME_LIMIT_SECONDS = 1800; // it may stop before finding the optimal solution
 
     public ILP() {
         var os = System.getProperty("os.name").toLowerCase();
@@ -36,6 +37,7 @@ public class ILP {
 
     private String runOpl(String[] args) throws IOException {
         var fullArgs = new ArrayList<>(Arrays.asList(args));
+        fullArgs.addFirst("-DtimeLimit=" + TIME_LIMIT_SECONDS);
         fullArgs.addFirst(OPLRUN);
         var processBuilder = new ProcessBuilder(fullArgs.toArray(String[]::new));
 
