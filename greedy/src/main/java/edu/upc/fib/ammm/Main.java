@@ -24,22 +24,26 @@ import java.util.function.Function;
 public class Main {
 
     public static void main(String[] args) {
+        var results = new LinkedHashMap<Problem, List<PerformanceData>>();
+
         if (args.length == 0) {
-            processAllFilesInDirectory(Path.of(Globals.PROBLEMS_DIR));
+            processAllFilesInDirectory(Path.of(Globals.PROBLEMS_DIR), results);
         } else {
             var path = Path.of(args[0]).toAbsolutePath();
             var file = path.toFile();
 
             if (file.isDirectory()) {
-                processAllFilesInDirectory(path);
+                processAllFilesInDirectory(path, results);
             } else {
-                solveFile(path, new HashMap<>());
+                solveFile(path, results);
             }
         }
+
+        var plotter = new PlotPerformance(results);
+        plotter.plot();
     }
 
-    public static void processAllFilesInDirectory(Path directory) {
-        var results = new HashMap<Problem, List<PerformanceData>>();
+    public static void processAllFilesInDirectory(Path directory, Map<Problem, List<PerformanceData>> results) {
         try (var files = Files.list(directory)) {
             files
                 .filter(path -> path.toString().endsWith(".dat"))
@@ -47,9 +51,6 @@ public class Main {
                 .forEach(path -> {
                     solveFile(path, results);
                 });
-            var plotter = new PlotPerformance(results);
-            plotter.plot();
-
         } catch (IOException e) {
             log.error("Error reading directory: {}", directory);
         }
@@ -70,7 +71,6 @@ public class Main {
         var performances = new ArrayList<PerformanceData>();
         PrintUtils.printProducts(p.getProducts());
 
-        var ilp = new ILP();
         var algorithms = List.of(
             new Greedy(p),
             new GreedyLocalSearch(p),
@@ -78,9 +78,6 @@ public class Main {
             new GRASP(p, 100, 0.5),
             new GRASP(p, 100, 1)
         );
-
-        var ilpPerf = ilp.solve(p);
-        performances.add(ilpPerf);
 
         for (var algo : algorithms) {
             long startTime = System.currentTimeMillis();
@@ -93,6 +90,13 @@ public class Main {
             var perfData = new PerformanceData(algo.toString(), s, elapsedTime);
             performances.add(perfData);
         }
+
+        if (Globals.ENABLE_ILP) {
+            var ilp = new ILP();
+            var ilpPerf = ilp.solve(p);
+            performances.add(ilpPerf);
+        }
+
         return performances;
     }
 }

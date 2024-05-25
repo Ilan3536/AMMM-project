@@ -13,11 +13,11 @@ import java.util.Random;
 @Slf4j
 public class InstanceGenerator {
 
-    private static final int NUM_PROBLEMS = 30;  // Number of examples to generate
-    private static final int START_INDEX = 10;  // Starting index for file names
+    private static final int NUM_PROBLEMS = 1;  // Number of examples to generate
+    private static final int START_INDEX = 40;  // Starting index for file names
 
-    private static final int MIN_PRODUCTS = 50;  // Minimum number of products
-    private static final int MAX_PRODUCTS = 60; // Maximum number of products
+    private static final int MIN_PRODUCTS = 18;  // Minimum number of products
+    private static final int MAX_PRODUCTS = 18; // Maximum number of products
 
     private static final int MIN_X = 10;
     private static final int MAX_X = 30;
