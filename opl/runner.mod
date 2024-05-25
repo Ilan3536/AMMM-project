@@ -1,7 +1,7 @@
 main {
   var files = new Array();
 
-  for (var i = 0; i < 10; ++i) {
+  for (var i = 0; i < 40; ++i) {
     files[i] = "project." + i + ".dat";
   }
 
@@ -11,9 +11,6 @@ main {
 
   for (var i = 0; i < files.length; ++i) {
     writeln("Running " + files[i]);
-
-    var start = new Date();
-    var startTime = start.getTime();
 
     var opl = new IloOplModel(def, cplex);
 
@@ -31,9 +28,6 @@ main {
 
     opl.end();
 
-    var end = new Date();
-    var endTime = end.getTime();
-    writeln("Time: " + (endTime - startTime) + " ms");
     writeln();
   }
 }
