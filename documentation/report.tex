@@ -182,11 +182,25 @@ Ensure that for any two objects, at least one of the non-overlapping conditions 
 
 \section{How to run}
 
+\begin{itemize}
+  \item Install IBM CPLEX
+  \item Install Java 22
+  \item Install Maven
+\end{itemize}
+
+Those are the commands to run it from command line without using an IDE
+
 This will run both OPL and Heuristic and output benchmark values in CSV.
 
 \begin{lstlisting}[language=bash]
 cd heuristic
-mvn compile exec:java -Dexec.mainClass="edu.upc.fib.ammm.Main" ../opl
+mvn compile exec:java -Dexec.mainClass="edu.upc.fib.ammm.Main" -Dexec.args="../opl"
+\end{lstlisting}
+
+Make plots of a run
+
+\begin{lstlisting}[language=bash]
+mvn compile exec:java -Dexec.mainClass="edu.upc.fib.ammm.Plot" -Dexec.args="output.csv"
 \end{lstlisting}
 
 \end{document}
