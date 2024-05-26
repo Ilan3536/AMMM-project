@@ -2,21 +2,23 @@ package edu.upc.fib.ammm;
 
 import edu.upc.fib.ammm.utils.Globals;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.knowm.xchart.CategoryChartBuilder;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.VectorGraphicsEncoder;
 
+import java.awt.*;
+import java.awt.font.TextAttribute;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.opencsv.CSVReader;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
+@Slf4j
 public class Plot {
     @SneakyThrows
     public static void main(String[] args) {
@@ -25,6 +27,15 @@ public class Plot {
 
         timeChart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
         objectiveChart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
+
+        int reduceFontBy = 4;
+        var font = objectiveChart.getStyler().getLegendFont();
+        var attributes = new HashMap<TextAttribute, Object>();
+        attributes.put(TextAttribute.SIZE, font.getSize() - reduceFontBy);
+        var newFont = font.deriveFont(attributes);
+
+        objectiveChart.getStyler().setLegendFont(newFont);
+        timeChart.getStyler().setLegendFont(newFont);
 
         //timeChart.getStyler().setYAxisLogarithmic(true);
         //timeChart.setYAxisTitle("log(Time)");
@@ -52,7 +63,7 @@ public class Plot {
 
                 for (var entry : all) {
                     double bestObjective = 0.0;
-                    for (int i = 2; i < entry.length; i += 2) {
+                    for (int i = 2; i < header.length; i += 2) {
                         var objective = Double.valueOf(entry[i+1]);
                         if (objective > bestObjective) {
                             bestObjective = objective;
@@ -60,7 +71,7 @@ public class Plot {
                     }
 
                     ns.add(Double.valueOf(entry[1]));
-                    for (int i = 2; i < entry.length; i += 2) {
+                    for (int i = 2; i < header.length; i += 2) {
                         var time = Double.valueOf(entry[i]);
                         var objective = Double.valueOf(entry[i+1]);
 
@@ -87,8 +98,12 @@ public class Plot {
                 }
 
                 // To import in the report
-                VectorGraphicsEncoder.saveVectorGraphic(timeChart, Path.of(Globals.OUT_DIR, "timeChart.pdf").toString(), VectorGraphicsEncoder.VectorGraphicsFormat.PDF);
-                VectorGraphicsEncoder.saveVectorGraphic(objectiveChart, Path.of(Globals.OUT_DIR, "objectiveChart.pdf").toString(), VectorGraphicsEncoder.VectorGraphicsFormat.PDF);
+                var timeChartPath = args[0] + ".timeChart.pdf";
+                VectorGraphicsEncoder.saveVectorGraphic(timeChart, Path.of(Globals.OUT_DIR, timeChartPath).toString(), VectorGraphicsEncoder.VectorGraphicsFormat.PDF);
+                log.info("Output {}", timeChartPath);
+                var objectiveChartPath = args[0] + ".objectiveChart.pdf";
+                VectorGraphicsEncoder.saveVectorGraphic(objectiveChart, Path.of(Globals.OUT_DIR, objectiveChartPath).toString(), VectorGraphicsEncoder.VectorGraphicsFormat.PDF);
+                log.info("Output {}", objectiveChartPath);
             }
         }
 
