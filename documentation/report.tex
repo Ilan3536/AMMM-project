@@ -4,6 +4,8 @@
 \usepackage{amssymb}
 \usepackage{geometry}
 \usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{flafter}
 \usepackage[affil-it]{authblk}
 \geometry{a4paper, margin=1in}
 
@@ -122,20 +124,58 @@ Ensure that for any two objects, at least one of the non-overlapping conditions 
 \forall i, j \in \{1, \ldots, n\}, i \neq j, \quad \sum_{d=1}^4 \text{Overlap}_{i,j,d} \geq 1
 \]
 
-\section{Graphs}
+\newpage
+
+\section{Tuning Local Search}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{./documentation/assets/localSearchParams.timeChart.pdf}
+    \caption{Time Parameters Local Search}
+    \label{fig:local_time}
+\end{figure}\FloatBarrier
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{./documentation/assets/timeChart.pdf}
-    \caption{Time chart}
-    \label{fig:time_chart}
-\end{figure}
+    \includegraphics[width=1\textwidth]{./documentation/assets/localSearchParams.objectiveChart.pdf}
+    \caption{Objective Parameters Local Search}
+    \label{fig:local_time}
+\end{figure}\FloatBarrier
+
+\newpage
+
+\section{Tuning GRASP}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\textwidth]{./documentation/assets/GRASPParams.timeChart.pdf}
+    \caption{Time Parameters GRASP}
+    \label{fig:grasp_time}
+\end{figure}\FloatBarrier
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\textwidth]{./documentation/assets/objectiveChart.pdf}
-    \caption{Objective chart}
-    \label{fig:objective_chart}
-\end{figure}
+    \includegraphics[width=1\textwidth]{./documentation/assets/GRASPParams.objectiveChart.pdf}
+    \caption{Objective Parameters GRASP}
+    \label{fig:grasp_time}
+\end{figure}\FloatBarrier
+
+\newpage
+
+\section{Performance overall}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\textwidth]{./documentation/assets/all.timeChart.pdf}
+    \caption{Time}
+    \label{fig:all_time}
+\end{figure}\FloatBarrier
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\textwidth]{./documentation/assets/all.objectiveChart.pdf}
+    \caption{Objective}
+    \label{fig:all_time}
+\end{figure}\FloatBarrier
 
 \end{document}
