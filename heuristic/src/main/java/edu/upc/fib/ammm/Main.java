@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 @Slf4j
@@ -80,9 +81,9 @@ public class Main {
 
         for (var algo : algorithms) {
             log.info("Running {}", algo);
-            long startTime = System.currentTimeMillis();
+            long startTime = System.nanoTime();
             Solution s = algo.run();
-            long elapsedTime = System.currentTimeMillis() - startTime;
+            long elapsedTime = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime);
 
             PrintUtils.printSolution(s, algo.toString(), true);
 
@@ -91,11 +92,30 @@ public class Main {
             performances.add(perfData);
         }
 
-        if (Globals.ENABLE_ILP) {
+        boolean runILP = Globals.ENABLE_ILP;
+
+        if (runILP && Globals.MAX_ILP_PROBLEM_NUMBER > 0) {
+            try {
+                var problemNumStr = p.getFilePath().split("\\.");
+                var problemNum = Integer.parseInt(problemNumStr[problemNumStr.length - 2]);
+                runILP = runILP && problemNum <= Globals.MAX_ILP_PROBLEM_NUMBER;
+                if (!runILP) {
+                    log.info("Skipping ILP for problem {}", problemNum);
+                }
+            } catch (Exception e) {
+                log.info("Error parsing problem number", e);
+            }
+        }
+
+        if (runILP) {
             var ilp = new ILP();
             log.info("Running {}", ilp);
             var ilpPerf = ilp.solve(p);
             performances.add(ilpPerf);
+        } else {
+            // Add unrun ILP solution anyway to CSV data to have same format
+            var s = new Solution(null, null, -1, 0, null);
+            performances.add(new PerformanceData("ILP", s, Float.NaN));
         }
 
         return performances;

@@ -54,7 +54,12 @@ public class PlotPerformance {
 
             for (var data : entry.getValue()) {
                 row.add(String.valueOf(data.time()));
-                row.add(String.valueOf(data.solution().getCost()));
+                int cost = data.solution().getCost();
+                if (cost == -1) {
+                    row.add(String.valueOf(Float.NaN));
+                } else {
+                    row.add(String.valueOf(data.solution().getCost()));
+                }
             }
             csv.append(String.join(",", row));
             csv.append("\n");
