@@ -23,7 +23,7 @@ public class Plot {
     @SneakyThrows
     public static void main(String[] args) {
         var timeChart = new XYChartBuilder().theme(Styler.ChartTheme.GGPlot2).width(800).height(800).title("Time Chart").xAxisTitle("N").yAxisTitle("Time").build();
-        var objectiveChart = new CategoryChartBuilder().theme(Styler.ChartTheme.GGPlot2).width(800).height(800).title("Objective Chart").xAxisTitle("N").yAxisTitle("Objective").build();
+        var objectiveChart = new XYChartBuilder().theme(Styler.ChartTheme.GGPlot2).width(800).height(800).title("Objective Chart").xAxisTitle("N").yAxisTitle("Objective").build();
 
         timeChart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
         objectiveChart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
@@ -89,12 +89,14 @@ public class Plot {
                     var series = timeChart.addSeries(algo.getKey(), ns, algo.getValue());
                     series.setMarker(SeriesMarkers.NONE);
                     series.setSmooth(true);
+                    series.setLineWidth(1f);
                 }
 
                 for (var algo: objectives.entrySet()) {
                     var series = objectiveChart.addSeries(algo.getKey(), ns, algo.getValue());
                     series.setMarker(SeriesMarkers.NONE);
-                    //series.setSmooth(true);
+                    series.setSmooth(true);
+                    series.setLineWidth(1f);
                 }
 
                 // To import in the report
