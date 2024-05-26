@@ -6,6 +6,8 @@
 \usepackage{graphicx}
 \usepackage{placeins}
 \usepackage{flafter}
+\usepackage{xcolor}
+\usepackage{listings}
 \usepackage[affil-it]{authblk}
 \geometry{a4paper, margin=1in}
 
@@ -177,5 +179,14 @@ Ensure that for any two objects, at least one of the non-overlapping conditions 
     \caption{Objective}
     \label{fig:all_time}
 \end{figure}\FloatBarrier
+
+\section{How to run}
+
+This will run both OPL and Heuristic and output benchmark values in CSV.
+
+\begin{lstlisting}[language=bash]
+cd heuristic
+mvn compile exec:java -Dexec.mainClass="edu.upc.fib.ammm.Main" ../opl
+\end{lstlisting}
 
 \end{document}
