@@ -1,7 +1,6 @@
 package edu.upc.fib.ammm.algorithms;
 
 import edu.upc.fib.ammm.model.Problem;
-import edu.upc.fib.ammm.model.Product;
 import edu.upc.fib.ammm.model.Solution;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,14 +20,17 @@ public class GRASP extends Heuristic {
         this.random = new Random();
     }
 
+    private GreedyLocalSearch CreateLocalSearch() {
+        return new GreedyLocalSearch(problem);
+    }
+
     @Override
     public Solution run() {
         Solution bestSolution = null;
 
         for (int iteration = 0; iteration < maxIterations; iteration++) {
             Solution greedySolution = constructGreedyRandomizedSolution();
-            Solution localOptimalSolution = new GreedyLocalSearch(problem)
-                .firstImprovingStrategy(greedySolution);
+            Solution localOptimalSolution = CreateLocalSearch().solve(greedySolution);
 
             if (bestSolution == null || localOptimalSolution.getCost() > bestSolution.getCost()) {
                 bestSolution = localOptimalSolution;
@@ -85,6 +87,7 @@ public class GRASP extends Heuristic {
         return "GRASP{" +
             "maxIterations=" + maxIterations +
             ", alpha=" + alpha +
+                ", " + CreateLocalSearch().toString() +
             '}';
     }
 }

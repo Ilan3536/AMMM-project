@@ -35,14 +35,14 @@ public class GraspExperiment {
 
             Solution bestOverallSolution = null;
             double bestAlpha = 0.0;
-            int bestMaxIterations = 100;
+            int bestMaxIterations = 1;
 
             for (double alpha : alphaValues) {
                 for (int maxIterations : iterationValues) {
                     Solution bestForThisCombo = null;
 
                     // Run multiple trials to account for variability
-                    for (int trial = 0; trial < 5; trial++) {
+                    for (int trial = 0; trial < 10; trial++) {
                         GRASP grasp = new GRASP(problem, maxIterations, alpha);
                         Solution currentSolution = grasp.run();
                         if (bestForThisCombo == null || currentSolution.getCost() > bestForThisCombo.getCost()) {

@@ -73,11 +73,26 @@ public class Main {
         PrintUtils.printProducts(p.getProducts());
 
         var algorithms = List.of(
+        /*  new GreedyLocalSearch(p, false, GreedyLocalSearch.Strategy.TASK_EXCHANGE),
+            new GreedyLocalSearch(p, true, GreedyLocalSearch.Strategy.TASK_EXCHANGE),
+            new GreedyLocalSearch(p, false, GreedyLocalSearch.Strategy.REASSIGNMENT),
+            new GreedyLocalSearch(p, true, GreedyLocalSearch.Strategy.REASSIGNMENT)
+            new GreedyLocalSearch(p, true, GreedyLocalSearch.Strategy.REASSIGNMENT)*/
             new Greedy(p),
             new GreedyLocalSearch(p),
+            /*
+            new GRASP(p, 1000, 0.3),
             new GRASP(p, 1000, 0.5),
-            new GRASP(p, 1000, 1.0)
+            new GRASP(p, 1000, 0.65),
+            new GRASP(p, 1000, 0.85),
+            new GRASP(p, 1000, 1.0)*/
+            new GRASP(p, 1000, 0.65)
         );
+
+        // Warm up jit for benchmark :(
+        for (var algo : algorithms) {
+            Solution s0 = algo.run();
+        }
 
         for (var algo : algorithms) {
             log.info("Running {}", algo);

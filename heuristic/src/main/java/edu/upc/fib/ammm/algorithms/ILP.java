@@ -18,7 +18,7 @@ public class ILP {
     final String model = Path.of("../opl/project.mod").toAbsolutePath().toString();
     final String OPLRUN_MACOS = "/Applications/CPLEX_Studio2211/opl/bin/x86-64_osx/oplrun";
     final String OPLRUN_WINDOWS = "C:\\Program Files\\IBM\\ILOG\\CPLEX_Studio2211\\opl\\bin\\x64_win64\\oplrun.exe";
-    final String OPLRUN_LINUX = "oplrun"; // Should be in PATH
+    final String OPLRUN_LINUX = "/opt/ibm/ILOG/CPLEX_Studio2211/opl/bin/x86-64_linux/oplrun";
     final String OPLRUN;
     final int TIME_LIMIT_SECONDS = 60*30; // it may stop before finding the optimal solution
 
