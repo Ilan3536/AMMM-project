@@ -313,53 +313,89 @@ GRASP consists of a construction phase where a feasible solution is generated us
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.9\textwidth]{./documentation/assets/localSearchParams.timeChart.pdf}
+    \includegraphics[width=0.9\textwidth]{./documentation/assets/new.localSearchParams.timeChart.pdf}
     \caption{Time Parameters Local Search}
     \label{fig:local_time}
 \end{figure}\FloatBarrier
 
-\begin{figure}
+The results show a clear trade-off between execution time and solution quality. The Best Improvement strategy, especially with Task Exchange, produced the highest objective values but took much longer to run. On the other hand, Task Reassignment methods were the fastest but resulted in slightly lower objective values.
+
+The First Improvement strategy, while faster, often settled for less optimal solutions compared to the Best Improvement strategy because it stops early upon finding the first better neighbor.
+
+\begin{figure}[!h]
     \centering
-    \includegraphics[width=1\textwidth]{./documentation/assets/localSearchParams.objectiveChart.pdf}
+    \includegraphics[width=1\textwidth]{./documentation/assets/new.localSearchParams.objectiveChart.pdf}
     \caption{Objective Parameters Local Search}
     \label{fig:local_objective}
 \end{figure}\FloatBarrier
 
+From the experiments, we can draw the following conclusions:
+\begin{itemize}
+    \item \textbf{Best Improvement + Task Exchange}: Best for scenarios where solution quality is most important, and higher execution times are acceptable.
+    \item \textbf{First Improvement + Task Reassignment}: Best for scenarios requiring quick solutions with reasonably good quality.
+    \item \textbf{Best Improvement + Task Reassignment}: Offers a balanced trade-off, providing good quality solutions within an acceptable time frame.
+    \item \textbf{First Improvement + Task Exchange}: Not recommended due to less optimal solutions and slower performance compared to task reassignment.
+\end{itemize}
+
+\section*{Conclusion}
+The Best Improvement strategy with Task Exchange is best for scenarios focusing on solution quality, despite longer execution times. On the other hand, the First Improvement strategy with Task Reassignment is preferable for scenarios needing quick solutions, balancing speed and solution quality well. The Best Improvement strategy with Task Reassignment offers a middle ground, providing good solutions within reasonable times. Therefore, the choice of strategy should match the specific needs for execution time and solution quality of the application. In this study, First Improvement and Reassignment were chosen to minimize time loss while maintaining satisfactory solution quality.
+
+
 \newpage
 
-\section{Tuning GRASP}
+\section{GRASP Parameter Tuning}
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=1\textwidth]{./documentation/assets/GRASPParams.timeChart.pdf}
-    \caption{Time Parameters GRASP}
+    \includegraphics[width=0.9\textwidth]{./documentation/assets/new.GRASPParams.timeChart.pdf}
+    \caption{Execution Time for Different Alpha Values in GRASP}
     \label{fig:grasp_time}
 \end{figure}\FloatBarrier
 
-\begin{figure}
+The results indicate that the execution time for the GRASP algorithm is generally faster with higher alpha values. Specifically, alpha values closer to 1 (corresponding to purely random selection) resulted in the fastest execution times, while lower alpha values, like 0.3, resulted in slower execution times.
+
+\begin{figure}[!h]
     \centering
-    \includegraphics[width=1\textwidth]{./documentation/assets/GRASPParams.objectiveChart.pdf}
-    \caption{Objective Parameters GRASP}
+    \includegraphics[width=1\textwidth]{./documentation/assets/new.GRASPParams.objectiveChart.pdf}
+    \caption{Objective Values for Different Alpha Values in GRASP}
     \label{fig:grasp_objective}
+\end{figure}\FloatBarrier
+
+In terms of objective values, both the lowest (alpha = 0.3) and the highest (alpha = 1) alpha values produced the lowest objective values. The intermediate alpha values, particularly alpha = 0.65, resulted in the best objective values, suggesting a balanced approach between greedy and random selection generates better results.
+
+\section*{Conclusion}
+The experiments reveal that using a higher alpha value in the GRASP algorithm speeds up the execution time, but both very low and very high alpha values result in lower objective values. The best solution quality was obtained with an alpha value of 0.65, which strikes a balance between greedy and random selection. For practical applications, an alpha value around 0.65 is recommended to achieve a good balance between execution time and solution quality.
+
+\newpage
+
+\section{Overall Performance Graphs}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\textwidth]{./documentation/assets/new.all.timeChart.pdf}
+    \caption{Execution Time for All Algorithms}
+    \label{fig:all_time}
+\end{figure}\FloatBarrier
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\textwidth]{./documentation/assets/new.all.objectiveChart.pdf}
+    \caption{Objective Values for All Algorithms}
+    \label{fig:all_objective}
 \end{figure}\FloatBarrier
 
 \newpage
 
-\section{Performance overall}
+\section{Conclusion}
 
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width=1\textwidth]{./documentation/assets/all.timeChart.pdf}
-    \caption{Time}
-    \label{fig:all_time}
-\end{figure}\FloatBarrier
+The overall performance analysis reveals significant differences among the algorithms in both execution time and solution quality. The ILP algorithm consistently performed the worst, failing to provide a solution for instances where \( N > 27 \) within a 30-minute timeframe. This limitation makes ILP unsuitable for larger problem sizes.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=1\textwidth]{./documentation/assets/all.objectiveChart.pdf}
-    \caption{Objective}
-    \label{fig:all_objective}
-\end{figure}\FloatBarrier
+In contrast, the Greedy algorithm provided quick solutions but often at the expense of solution quality. The addition of Local Search to the Greedy algorithm improved the solution quality considerably, particularly with the Best Improvement strategy combined with Task Exchange, although it required more time to execute.
+
+The GRASP algorithm, with its different alpha parameters, demonstrated a good balance between execution time and solution quality. While higher alpha values (purely random selection) resulted in faster execution times, an intermediate alpha value, particularly around 0.65, yielded the best objective values. This suggests that a balanced approach between greedy and random selection is most effective.
+
+In summary, for small to medium-sized problems where execution time is critical, the Greedy algorithm with Task Reassignment is preferable. For scenarios requiring high-quality solutions, the Best Improvement strategy with Task Exchange or GRASP with an alpha value of 0.65 offers the best results. ILP is impractical for larger instances due to its prohibitive execution times.
+
 
 \section{How to run}
 
