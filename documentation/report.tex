@@ -8,6 +8,7 @@
 \usepackage{flafter}
 \usepackage{xcolor}
 \usepackage{listings}
+\usepackage{subfig}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{hyperref}
@@ -129,8 +130,6 @@ Ensure that for any two objects, at least one of the non-overlapping conditions 
 \[
 \forall i, j \in \{1, \ldots, n\}, i \neq j, \quad \sum_{d=1}^4 \text{Overlap}_{i,j,d} \geq 1
 \]
-
-\newpage
 
 \section{Heuristic}
 
@@ -307,24 +306,29 @@ GRASP consists of a construction phase where a feasible solution is generated us
 \end{algorithm}
 
 
-\newpage
-
 \section{Tuning Local Search}
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.9\textwidth]{./documentation/assets/new.localSearchParams.timeChart.pdf}
+    \includegraphics[width=0.6\textwidth]{./documentation/assets/new.localSearchParams.timeChart.pdf}
     \caption{Time Parameters Local Search}
     \label{fig:local_time}
 \end{figure}\FloatBarrier
 
 The results show a clear trade-off between execution time and solution quality. The Best Improvement strategy, especially with Task Exchange, produced the highest objective values but took much longer to run. On the other hand, Task Reassignment methods were the fastest but resulted in slightly lower objective values.
 
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{./documentation/assets/new.localSearchParams.objectiveChart.pdf}
+    \caption{Objective Parameters Local Search}
+    \label{fig:local_objective}
+\end{figure}\FloatBarrier
+
 The First Improvement strategy, while faster, often settled for less optimal solutions compared to the Best Improvement strategy because it stops early upon finding the first better neighbor.
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=1\textwidth]{./documentation/assets/new.localSearchParams.objectiveChart.pdf}
+    \includegraphics[width=0.6\textwidth]{./documentation/assets/new.localSearchParams.objectiveChart.pdf}
     \caption{Objective Parameters Local Search}
     \label{fig:local_objective}
 \end{figure}\FloatBarrier
@@ -341,13 +345,11 @@ From the experiments, we can draw the following conclusions:
 The Best Improvement strategy with Task Exchange is best for scenarios focusing on solution quality, despite longer execution times. On the other hand, the First Improvement strategy with Task Reassignment is preferable for scenarios needing quick solutions, balancing speed and solution quality well. The Best Improvement strategy with Task Reassignment offers a middle ground, providing good solutions within reasonable times. Therefore, the choice of strategy should match the specific needs for execution time and solution quality of the application. In this study, First Improvement and Reassignment were chosen to minimize time loss while maintaining satisfactory solution quality.
 
 
-\newpage
-
 \section{GRASP Parameter Tuning}
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=0.9\textwidth]{./documentation/assets/new.GRASPParams.timeChart.pdf}
+    \includegraphics[width=0.6\textwidth]{./documentation/assets/new.GRASPParams.timeChart.pdf}
     \caption{Execution Time for Different Alpha Values in GRASP}
     \label{fig:grasp_time}
 \end{figure}\FloatBarrier
@@ -356,7 +358,7 @@ The results indicate that the execution time for the GRASP algorithm is generall
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=1\textwidth]{./documentation/assets/new.GRASPParams.objectiveChart.pdf}
+    \includegraphics[width=0.6\textwidth]{./documentation/assets/new.GRASPParams.objectiveChart.pdf}
     \caption{Objective Values for Different Alpha Values in GRASP}
     \label{fig:grasp_objective}
 \end{figure}\FloatBarrier
@@ -366,29 +368,25 @@ In terms of objective values, both the lowest (alpha = 0.3) and the highest (alp
 \section*{Conclusion}
 The experiments reveal that using a higher alpha value in the GRASP algorithm speeds up the execution time, but both very low and very high alpha values result in lower objective values. The best solution quality was obtained with an alpha value of 0.65, which strikes a balance between greedy and random selection. For practical applications, an alpha value around 0.65 is recommended to achieve a good balance between execution time and solution quality.
 
-\newpage
-
 \section{Overall Performance Graphs}
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=1\textwidth]{./documentation/assets/new.all.timeChart.pdf}
+    \includegraphics[width=0.6\textwidth]{./documentation/assets/new.all.timeChart.pdf}
     \caption{Execution Time for All Algorithms}
     \label{fig:all_time}
 \end{figure}\FloatBarrier
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[width=1\textwidth]{./documentation/assets/new.all.objectiveChart.pdf}
+    \includegraphics[width=0.6\textwidth]{./documentation/assets/new.all.objectiveChart.pdf}
     \caption{Objective Values for All Algorithms}
     \label{fig:all_objective}
 \end{figure}\FloatBarrier
 
-\newpage
-
 \section{Conclusion}
 
-The overall performance analysis reveals significant differences among the algorithms in both execution time and solution quality. The ILP algorithm always finds the best solution beacuse it explores all feasible solutions. But the tradeoff is that it cconsistently performed the worst, failing to provide a solution for instances where \( N > 27 \) within a 30-minute timeframe. This limitation makes ILP unsuitable for larger problem sizes.
+The overall performance analysis reveals significant differences among the algorithms in both execution time and solution quality. The ILP algorithm always finds the best solution because it explores all feasible solutions. But the trade-off is that it consistently performed the worst, failing to provide a solution for instances where \( N > 27 \) within a 30-minute time-frame. This limitation makes ILP unsuitable for larger problem sizes.
 
 In contrast, the Greedy algorithm provided quick solutions but often at the expense of solution quality. The addition of Local Search to the Greedy algorithm improved the solution quality considerably, particularly with the Best Improvement strategy combined with Task Exchange, although it required more time to execute.
 
@@ -407,17 +405,26 @@ In summary, for small to medium-sized problems where execution time is critical,
 
 Those are the commands to run it from command line without using an IDE
 
-This will run both OPL and Heuristic and output benchmark values in CSV.
+This command will run both OPL and Heuristic and output benchmark values in CSV.
 
 \begin{lstlisting}[language=bash]
 cd heuristic
 mvn compile exec:java -Dexec.mainClass="edu.upc.fib.ammm.Main" -Dexec.args="../opl"
 \end{lstlisting}
 
-Make plots of a run
+Make plots of a run.
 
 \begin{lstlisting}[language=bash]
 mvn compile exec:java -Dexec.mainClass="edu.upc.fib.ammm.Plot" -Dexec.args="output.csv"
 \end{lstlisting}
+
+Instance generator.
+
+Change InstanceGenerator.java parameters and then run.
+
+\begin{lstlisting}[language=bash]
+mvn compile exec:java -Dexec.mainClass="edu.upc.fib.ammm.InstanceGenerator"
+\end{lstlisting}
+
 
 \end{document}

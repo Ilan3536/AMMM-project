@@ -1,9 +1,14 @@
 \documentclass{beamer}
+\usepackage{algpseudocode}
 \title{Algorithmic Methods for Mathematical Models\\
  Course Project}
 \author{Marco Bartoli, Ilan Vezmarovic}
 \institute{UPC Universitat Politècnica de Catalunya}
 \date{\today}
+
+\makeatletter
+\algrenewcommand\ALG@beginalgorithmic{\footnotesize}
+\makeatother
 
 \begin{document}
 
@@ -117,34 +122,159 @@ At least one of the non-overlapping conditions is satisfied:
     
 \end{frame}
 
+
+\begin{frame}[fragile] 
+\frametitle{Greedy heuristic}
+\begin{algorithm}
+\begin{algorithmic}
+    \State \textbf{Input:} A problem instance with $n$ products, suitcase dimensions $(x, y)$, and weight capacity $c$.
+    \State \textbf{Output:} A feasible solution with selected products that maximize the total price.    
+
+    \State Initialize solution as empty
+    \State Sort products by $(price / side / weight)$ in descending order
+
+    \For{each product in sorted products}
+        \If{product can fit in the suitcase and does not exceed weight limit}
+            \State Add product to solution
+            \State Update suitcase dimensions and weight capacity
+        \EndIf
+    \EndFor
+
+    \State \Return solution
+\end{algorithmic}
+\end{algorithm}
+
+\end{frame}
+
+
+\begin{frame}[fragile] 
+\frametitle{Local search}
+\begin{algorithm}
+\begin{algorithmic}
+   \State \textbf{Input:} An initial solution, mode and strategy.
+    \State \textbf{Output:} An improved solution
+
+    \State bestSolution = initialSolution
+    \State improved = true
+        
+    \While{improved}
+        \State improved = false
+
+        \For{each product in bestSolution}
+            \If{strategy == EXCHANGE}
+                \State newSolution = exchangeProduct(bestSolution, product)
+            \ElsIf{strategy == REASSIGNMENT}
+                \State newSolution = reassignProduct(bestSolution, product)
+            \EndIf
+
+            \If{newSolution is better than bestSolution}
+                \State bestSolution = newSolution
+                \State improved = true
+                
+                \If{mode == FIRST\_IMPROVEMENT}
+                    \State \Return bestSolution
+                \EndIf
+            \EndIf
+        \EndFor
+    \EndWhile
+
+    \State \Return bestSolution
+\end{algorithmic}
+\end{algorithm}
+
+\end{frame}
+
+
 \begin{frame}
 \frametitle{Local Search Time chart}
-\includegraphics[width=0.8\textwidth]{./documentation/assets/localSearchParams.timeChart.pdf}
+\includegraphics[width=0.8\textwidth]{./documentation/assets/new.localSearchParams.timeChart.pdf}
 \end{frame}
 
 \begin{frame}
 \frametitle{Local Search Objective chart}
-\includegraphics[width=0.8\textwidth]{./documentation/assets/localSearchParams.objectiveChart.pdf}
+\includegraphics[width=0.8\textwidth]{./documentation/assets/new.localSearchParams.objectiveChart.pdf}
+\end{frame}
+
+\begin{frame}[fragile] 
+\frametitle{GRASP}
+\begin{algorithm}
+\begin{algorithmic}
+    \State \textbf{Input:} A problem instance, maxIterations, alpha (for RCL threshold)
+    \State \textbf{Output:} The best solution found
+
+    \State bestSolution = null
+
+    \For{iteration = 1 to maxIterations}
+        \State greedySolution = constructGreedyRandomizedSolution(problem, alpha)
+        \State localOptimalSolution = LOCAL\_SEARCH(greedySolution, FIRST\_IMPROVEMENT)
+
+        \If{bestSolution is null or localOptimalSolution is better than bestSolution}
+            \State bestSolution = localOptimalSolution
+        \EndIf
+    \EndFor
+
+    \State \Return bestSolution
+\end{algorithmic}
+\end{algorithm}
+\end{frame}
+
+\begin{frame}[fragile] 
+\frametitle{GRASP (2)}
+\begin{algorithm}
+\begin{algorithmic}
+    \State \textbf{Input:} A problem instance, alpha (for RCL threshold)
+    \State \textbf{Output:} A feasible solution
+
+    \State Initialize solution as empty
+    \State Sort products by $(price / side / weight)$ in descending order
+
+    \While{there are remaining products}
+        \State $qMax$ = maximum $Q$ value in remaining products
+        \State $qMin$ = minimum $Q$ value in remaining products
+        \State threshold = $qMax - alpha \times (qMax - qMin)$
+
+        \State RCL = \{products with $Q$ value $>=$ threshold\}
+        \State selectedProduct = randomly select a product from RCL
+
+        \If{selectedProduct fits in the suitcase and does not exceed weight limit}
+            \State Add selectedProduct to solution
+            \State Update suitcase dimensions and weight capacity
+        \EndIf
+    \EndWhile
+
+    \State \Return solution
+\end{algorithmic}
+\end{algorithm}
+
 \end{frame}
 
 \begin{frame}
 \frametitle{GRASP Time chart}
-\includegraphics[width=0.8\textwidth]{./documentation/assets/GRASPParams.timeChart.pdf}
+\includegraphics[width=0.8\textwidth]{./documentation/assets/new.GRASPParams.timeChart.pdf}
 \end{frame}
 
 \begin{frame}
 \frametitle{GRASP Objective chart}
-\includegraphics[width=0.8\textwidth]{./documentation/assets/GRASPParams.objectiveChart.pdf}
+\includegraphics[width=0.8\textwidth]{./documentation/assets/new.GRASPParams.objectiveChart.pdf}
 \end{frame}
 
 \begin{frame}
 \frametitle{All Time chart}
-\includegraphics[width=0.8\textwidth]{./documentation/assets/all.timeChart.pdf}
+\includegraphics[width=0.8\textwidth]{./documentation/assets/new.all.timeChart.pdf}
 \end{frame}
 
 \begin{frame}
 \frametitle{All Objective chart}
-\includegraphics[width=0.8\textwidth]{./documentation/assets/all.objectiveChart.pdf}
+\includegraphics[width=0.8\textwidth]{./documentation/assets/new.all.objectiveChart.pdf}
+\end{frame}
+
+\begin{frame}
+\frametitle{Improvements}
+\begin{itemize}
+    \item Parallelize algorithm
+    \item Better strategies
+    \item Implement the state of the art for heuristic
+\end{itemize}
 \end{frame}
 
 \end{document}
