@@ -8,6 +8,10 @@
 \usepackage{flafter}
 \usepackage{xcolor}
 \usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{hyperref}
+\usepackage{enumitem}
 \usepackage[affil-it]{authblk}
 \geometry{a4paper, margin=1in}
 
@@ -125,6 +129,183 @@ Ensure that for any two objects, at least one of the non-overlapping conditions 
 \[
 \forall i, j \in \{1, \ldots, n\}, i \neq j, \quad \sum_{d=1}^4 \text{Overlap}_{i,j,d} \geq 1
 \]
+
+\newpage
+
+\section{Heuristic}
+
+\subsection{Greedy Algorithm}
+A greedy algorithm makes the optimal choice at each step by selecting products based on $Qvalue = \frac{price}{side \times weight}$.
+
+\subsubsection{Pseudocode}
+\begin{algorithm}
+\caption{Greedy Algorithm}
+\begin{algorithmic}
+    \State \textbf{Input:} A problem instance with $n$ products, suitcase dimensions $(x, y)$, and weight capacity $c$.
+    \State \textbf{Output:} A feasible solution with selected products that maximize the total price.    
+
+    \State Initialize solution as empty
+    \State Sort products by $(price / side / weight)$ in descending order
+
+    \For{each product in sorted products}
+        \If{product can fit in the suitcase and does not exceed weight limit}
+            \State Add product to solution
+            \State Update suitcase dimensions and weight capacity
+        \EndIf
+    \EndFor
+
+    \State \Return solution
+\end{algorithmic}
+\end{algorithm}
+
+\section{Meta-heuristics}
+
+\subsection{Local Search Algorithm}
+After constructing an initial solution using the greedy algorithm, a local search is applied to improve it by exploring neighboring solutions.
+
+\subsubsection{Pseudocode}
+\begin{algorithm}
+\caption{Local Search Algorithm}
+\begin{algorithmic}
+    \State \textbf{Input:} An initial solution, mode (FIRST\_IMPROVEMENT or BEST\_IMPROVEMENT), strategy (EXCHANGE or REASSIGNMENT)
+    \State \textbf{Output:} An improved solution
+
+    \State bestSolution = initialSolution
+    \State improved = true
+        
+    \While{improved}
+        \State improved = false
+
+        \For{each product in bestSolution}
+            \If{strategy == EXCHANGE}
+                \State newSolution = exchangeProduct(bestSolution, product)
+            \ElsIf{strategy == REASSIGNMENT}
+                \State newSolution = reassignProduct(bestSolution, product)
+            \EndIf
+
+            \If{newSolution is better than bestSolution}
+                \State bestSolution = newSolution
+                \State improved = true
+                
+                \If{mode == FIRST\_IMPROVEMENT}
+                    \State \Return bestSolution
+                \EndIf
+            \EndIf
+        \EndFor
+    \EndWhile
+
+    \State \Return bestSolution
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Exchange Product}
+\begin{algorithmic}
+    \State \textbf{Input:} A solution, a product to be exchanged
+    \State \textbf{Output:} A new solution with the product exchanged
+
+    \State bestSolution = initialSolution
+    \State newProductList = copy of the selected product list from the solution
+    \State remove the selected product from newProductList
+
+    \For{each unselected product}
+        \State add unselected product to newProductList
+        \State newSolution = findSolutionForProductList(newProductList)
+        
+        \If{newSolution is better than bestSolution}
+            \State bestSolution = newSolution
+
+            \If{mode == \texttt{FIRST\_IMPROVEMENT}}
+                \State \Return bestSolution
+            \EndIf
+        \EndIf
+        \State remove unselected product from newProductList        
+    \EndFor
+
+    \State \Return bestSolution
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Reassign Product}
+\begin{algorithmic}
+    \State \textbf{Input:} A solution, a product to be excluded for re-evaluation
+    \State \textbf{Output:} A new solution with products reassigned
+
+    \State bestSolution = initialSolution
+    
+    \For{each selected product}
+        \State newProductList = copy of the all product list
+        \State remove the selected product from newProductList
+        
+        \State newSolution = findSolutionForProductList(newProductList)    
+
+        \If{newSolution is better than current solution}
+            \State bestSolution = newSolution
+    
+            \If{mode == FIRST\_IMPROVEMENT}
+                \State \Return bestSolution
+            \EndIf
+        \EndIf                
+    \EndFor
+    
+    \State \Return bestSolution
+\end{algorithmic}
+\end{algorithm}
+
+
+\subsection{GRASP (Greedy Randomized Adaptive Search Procedure)}
+GRASP consists of a construction phase where a feasible solution is generated using a randomized greedy algorithm, followed by a local search to iteratively improve the solution. By default, GRASP uses \texttt{FIRST\_IMPROVEMENT} and \texttt{EXCHANGE} for local search.
+
+\subsubsection{Pseudocode}
+\begin{algorithm}
+\caption{GRASP Algorithm}
+\begin{algorithmic}
+    \State \textbf{Input:} A problem instance, maxIterations, alpha (for RCL threshold)
+    \State \textbf{Output:} The best solution found
+
+    \State bestSolution = null
+
+    \For{iteration = 1 to maxIterations}
+        \State greedySolution = constructGreedyRandomizedSolution(problem, alpha)
+        \State localOptimalSolution = LOCAL\_SEARCH(greedySolution, FIRST\_IMPROVEMENT)
+
+        \If{bestSolution is null or localOptimalSolution is better than bestSolution}
+            \State bestSolution = localOptimalSolution
+        \EndIf
+    \EndFor
+
+    \State \Return bestSolution
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Construct Greedy Randomized Solution}
+\begin{algorithmic}
+    \State \textbf{Input:} A problem instance, alpha (for RCL threshold)
+    \State \textbf{Output:} A feasible solution
+
+    \State Initialize solution as empty
+    \State Sort products by $(price / side / weight)$ in descending order
+
+    \While{there are remaining products}
+        \State $qMax$ = maximum $Q$ value in remaining products
+        \State $qMin$ = minimum $Q$ value in remaining products
+        \State threshold = $qMax - alpha \times (qMax - qMin)$
+
+        \State RCL = \{products with $Q$ value $>=$ threshold\}
+        \State selectedProduct = randomly select a product from RCL
+
+        \If{selectedProduct fits in the suitcase and does not exceed weight limit}
+            \State Add selectedProduct to solution
+            \State Update suitcase dimensions and weight capacity
+        \EndIf
+    \EndWhile
+
+    \State \Return solution
+\end{algorithmic}
+\end{algorithm}
+
 
 \newpage
 
