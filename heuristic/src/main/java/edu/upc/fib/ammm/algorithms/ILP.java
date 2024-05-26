@@ -20,7 +20,7 @@ public class ILP {
     final String OPLRUN_WINDOWS = "C:\\Program Files\\IBM\\ILOG\\CPLEX_Studio2211\\opl\\bin\\x64_win64\\oplrun.exe";
     final String OPLRUN_LINUX = "oplrun"; // Should be in PATH
     final String OPLRUN;
-    final int TIME_LIMIT_SECONDS = 1800; // it may stop before finding the optimal solution
+    final int TIME_LIMIT_SECONDS = 60*30; // it may stop before finding the optimal solution
 
     public ILP() {
         var os = System.getProperty("os.name").toLowerCase();
